@@ -84,6 +84,9 @@ class Board:
         if piece.lower() == "p":
             return self.is_valid_pawn_move(piece, start, end)
         
+        if piece.lower() == "n":
+            return self.is_valid_knight_move(piece, start, end)
+        
         return False
     
     def is_valid_pawn_move(self, piece, start, end):
@@ -133,10 +136,10 @@ class Board:
         sr, sc = start
         er, ec = end
 
-        direction = -1 if piece.isupper() else 1 # white moves up, black moves down
+        dr = abs(er - sr)
+        dc = abs(ec - sc)
 
-        start_row_white = 7
-        start_row_black = 0
+        return (dr, dc) in [(2, 1), (1, 2)]
 
-        target = self.board[er][ec]
+
 
