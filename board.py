@@ -78,7 +78,7 @@ class Board:
         if self.get_piece_colour(piece) != self.turn: # must move your own turn
             return False
         
-        if target != "." and self.get_piece_color(piece) == self.get_piece_color(target): # can't capture your own piece
+        if target != "." and self.get_piece_colour(piece) == self.get_piece_colour(target): # can't capture your own piece
             return False
         
         if piece.lower() == "p":
@@ -123,7 +123,7 @@ class Board:
         # 3. Diagonal capture
         # -----------------------
         if abs(ec - sc) == 1 and er == sr + direction:
-            if target != "." and self.get_piece_color(target) != self.get_piece_color(piece):
+            if target != "." and self.get_piece_colour(target) != self.get_piece_colour(piece):
                 return True
 
         return False
