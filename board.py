@@ -166,6 +166,33 @@ class Board:
             c += col_step
 
         return True
+    
+    def is_valid_rook_move(self, piece, start, end):
+        sr, sc = start
+        er, ec = end
+
+        if sr != er and sc != ec: # ensure straight line movement
+            return False
+
+        
+        if sr == er: # determine direction
+            row_step = 0 # hor
+            col_step = 1 if ec > sc else -1
+        else:
+            col_step = 0 # vert
+            row_step = 1 if er > sr else -1
+
+        r = sr + row_step # start one square away from the rook
+        c = sc + col_step
+
+        while (r, c) != (er, ec): # walk to destination
+            if self.board[r][c] != ".":
+                return False
+            r += row_step
+            c += col_step
+
+        return True
+
 
 
 
