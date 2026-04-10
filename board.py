@@ -90,6 +90,16 @@ class Board:
         if piece.lower() == "b":
             return self.is_valid_bishop_move(piece, start, end)
         
+        if piece.lower() == "r":
+            return self.is_valid_rook_move(piece, start, end)
+        
+        if piece.lower() == "q":
+            return self.is_valid_queen_move(piece, start, end)
+        
+        if piece.lower() == "k":
+            return self.is_valid_king_move(piece, start, end)
+        
+        
         return False
     
     def is_valid_pawn_move(self, piece, start, end):
@@ -236,6 +246,25 @@ class Board:
             c += col_step
 
         return True
+    
+    def is_valid_king_move(self, piece, start, end):
+        sr, sc = start
+        er, ec = end
+
+        dr = abs(er - sr)
+        dc = abs(ec - sc)
+
+        # king moves one square in any direction
+        if max(dr, dc) == 1:
+            return True
+
+        return False
+
+        
+
+        
+
+
 
 
 
