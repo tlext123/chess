@@ -1,68 +1,55 @@
-import pygame
+"""
+Chess Board Module
 
-WIDTH, HEIGHT = 512, 512
-SQUARE_SIZE = WIDTH // 8
+This module defines the core Board class used to represent and manage the state of a chess game.
 
-WHITE = (240, 217, 181)
-BROWN = (181, 136, 99)
+The Board class is responsible for:
+- Initialising the chess board in the standard starting position
+- Storing the current state of the game using a 2D list representation
+- Handling basic piece movement between squares
 
-pygame.init()
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('Chess')
+Board Representation:
+- The board is an 8x8 grid (list of lists)
+- Each element represents a square on the board
+- Uppercase letters represent White pieces (P, R, N, B, Q, K)
+- Lowercase letters represent Black pieces (p, r, n, b, q, k)
+- A dot "." represents an empty square
 
-images = {
-    "P": pygame.transform.scale(pygame.image.load("chess/assets/white-pawn.png").convert_alpha(), (SQUARE_SIZE, SQUARE_SIZE)),
-    "p": pygame.transform.scale(pygame.image.load("chess/assets/black-pawn.png").convert_alpha(), (SQUARE_SIZE, SQUARE_SIZE)),
-    "R": pygame.transform.scale(pygame.image.load("chess/assets/white-rook.png").convert_alpha(), (SQUARE_SIZE, SQUARE_SIZE)),
-    "r": pygame.transform.scale(pygame.image.load("chess/assets/black-rook.png").convert_alpha(), (SQUARE_SIZE, SQUARE_SIZE)),
-    "N": pygame.transform.scale(pygame.image.load("chess/assets/white-knight.png").convert_alpha(), (SQUARE_SIZE, SQUARE_SIZE)),
-    "n": pygame.transform.scale(pygame.image.load("chess/assets/black-knight.png").convert_alpha(), (SQUARE_SIZE, SQUARE_SIZE)),
-    "B": pygame.transform.scale(pygame.image.load("chess/assets/white-bishop.png").convert_alpha(), (SQUARE_SIZE, SQUARE_SIZE)),
-    "b": pygame.transform.scale(pygame.image.load("chess/assets/black-bishop.png").convert_alpha(), (SQUARE_SIZE, SQUARE_SIZE)),
-    "Q": pygame.transform.scale(pygame.image.load("chess/assets/white-queen.png").convert_alpha(), (SQUARE_SIZE, SQUARE_SIZE)),
-    "q": pygame.transform.scale(pygame.image.load("chess/assets/black-queen.png").convert_alpha(), (SQUARE_SIZE, SQUARE_SIZE)),
-    "K": pygame.transform.scale(pygame.image.load("chess/assets/white-king.png").convert_alpha(), (SQUARE_SIZE, SQUARE_SIZE)),
-    "k": pygame.transform.scale(pygame.image.load("chess/assets/black-king.png").convert_alpha(), (SQUARE_SIZE, SQUARE_SIZE))
-}
+Coordinate System:
+- The board uses [row][column] indexing
+- Row 0 is the top of the board (Black side)
+- Row 7 is the bottom of the board (White side)
 
-board = [
-    ["r","n","b","q","k","b","n","r"],
-    ["p","p","p","p","p","p","p","p"],
-    [".",".",".",".",".",".",".","."],
-    [".",".",".",".",".",".",".","."],
-    [".",".",".",".",".",".",".","."],
-    [".",".",".",".",".",".",".","."],
-    ["P","P","P","P","P","P","P","P"],
-    ["R","N","B","Q","K","B","N","R"]
-]
+Note:
+This module does not handle any graphical rendering or user input.
+It is purely responsible for game state and logic. The GUI layer interacts
+with this class to display the board and apply moves.
+"""
 
-def draw_board():
-    for row in range(8):
-        for col in range(8):
-            color = WHITE if (row + col) % 2 ==0 else BROWN
-            pygame.draw.rect(
-                screen,
-                color,
-                (col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE)
-            )
+class Board:
+    def __init__(self):
+        self.board = self.create_starting_board()
 
-def draw_pieces():
-    for row in range(8):
-        for col in range(8):
-            piece = board[row][col]
-            if piece != ".":
-                screen.blit(images[piece], (col * SQUARE_SIZE, row * SQUARE_SIZE))
+    def create_starting_board(self):              
+        return [
+            ["r","n","b","q","k","b","n","r"],
+            ["p","p","p","p","p","p","p","p"],
+            [".",".",".",".",".",".",".","."],
+            [".",".",".",".",".",".",".","."],
+            [".",".",".",".",".",".",".","."],
+            [".",".",".",".",".",".",".","."],
+            ["P","P","P","P","P","P","P","P"],
+            ["R","N","B","Q","K","B","N","R"]
+        ]
+    
+    def get_piece(self, row, col):
+        return self.board[row][col]
 
-running = True
-while running:
-    draw_board()
-    draw_pieces()
-    pygame.display.flip()
+    
+    def move_piece(self, start, end):
+        sr, sc = start             # define the starting and ending sqaures using the row and column
+        er, ec = end
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-pygame.quit()
-
-
+        piece = self.board[sr][sc] # access the piece in the selected square
+        self.board[sr][sc] = "."   # replace the starting square with an empty square
+        self.board[er][ec] = piece # place the selected piece in the chosen square
