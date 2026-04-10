@@ -111,7 +111,7 @@ class Board:
         # --------------------------
 
         if ec == sc and er == sr + 2 * direction:
-            if piece.isupeer() and sr == start_row_white:
+            if piece.isupper() and sr == start_row_white:
                 if self.board[sr + direction][sc] == "." and target == ".":
                     return True
 
@@ -127,3 +127,16 @@ class Board:
                 return True
 
         return False
+    
+
+    def is_valid_knight_move(self, piece, start, end):
+        sr, sc = start
+        er, ec = end
+
+        direction = -1 if piece.isupper() else 1 # white moves up, black moves down
+
+        start_row_white = 7
+        start_row_black = 0
+
+        target = self.board[er][ec]
+
