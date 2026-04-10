@@ -57,12 +57,22 @@ board = Board()
 def draw_board():
     for row in range(8):
         for col in range(8):
-            color = WHITE if (row + col) % 2 ==0 else BROWN
+            color = WHITE if (row + col) % 2 == 0 else BROWN
             pygame.draw.rect(
                 screen,
                 color,
                 (col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE)
             )
+
+def draw_highlight():
+    if selected_square:
+        row, col = selected_square
+        pygame.draw.rect(
+            screen,
+            (0, 255, 0), # green highlight
+            (col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE),
+            3
+        )
 
 def draw_pieces():
     for row in range(8):
@@ -71,14 +81,35 @@ def draw_pieces():
             if piece != ".":
                 screen.blit(images[piece], (col * SQUARE_SIZE, row * SQUARE_SIZE))
 
+
+selected_square = None
+
+def get_square_from_mouse(pos):
+    x, y = pos
+    col = x // SQUARE_SIZE
+    row = y // SQUARE_SIZE
+    return row, col
+
 running = True
 while running:
     draw_board()
+    draw_highlight()
     draw_pieces()
     pygame.display.flip()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            pos = pygame.mouse.get_pos()
+            row, col = get_square_from_mouse(pos)
+
+            if selected_square is None:
+                if board.board[row][col] != ".":
+                    selected_square = (row, col)
+            else:
+                board.move_piece(selected_square, (row, col))
+                selected_square = None
 
 pygame.quit()
