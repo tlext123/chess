@@ -29,6 +29,7 @@ with this class to display the board and apply moves.
 class Board:
     def __init__(self):
         self.board = self.create_starting_board()
+        self.turn = "white"
 
     def create_starting_board(self):              
         return [
@@ -47,9 +48,37 @@ class Board:
 
     
     def move_piece(self, start, end):
+        if not self.is_legal_move(start, end):
+            return
+
         sr, sc = start             # define the starting and ending sqaures using the row and column
         er, ec = end
 
         piece = self.board[sr][sc] # access the piece in the selected square
         self.board[sr][sc] = "."   # replace the starting square with an empty square
         self.board[er][ec] = piece # place the selected piece in the chosen square
+
+        self.turn = "black" if self.turn == "white" else "white"
+
+    def get_piece_colour(self, piece):
+        if piece == ".":
+            return None
+        return "white" if piece.isupper() else "black"
+    
+    def is_legal_move(self, start, end):
+        sr, sc = start
+        er, ec = end
+
+        piece = self.board[sr][sc]
+        target = self.board[er][ec]
+
+        if piece == ".": # can't move an empty square
+            return None
+        
+        if self.get_piece_colour(piece) != self.turn: # must move your own turn
+            return False
+        
+        if target != "." and self.get_piece_color(piece) == self.get_piece_color(target): # can't capture your own piece
+            return False
+        
+        return True
