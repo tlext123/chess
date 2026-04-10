@@ -87,6 +87,9 @@ class Board:
         if piece.lower() == "n":
             return self.is_valid_knight_move(piece, start, end)
         
+        if piece.lower() == "b":
+            return self.is_valid_bishop_move(piece, start, end)
+        
         return False
     
     def is_valid_pawn_move(self, piece, start, end):
@@ -140,6 +143,34 @@ class Board:
         dc = abs(ec - sc)
 
         return (dr, dc) in [(2, 1), (1, 2)]
+    
+    def is_valid_bishop_move(self, piece, start, end):
+        sr, sc = start
+        er, ec = end
+
+        dr = er - sr
+        dc = ec - sc
+
+        if abs(dr) != abs(dc): # ensuring diagonal movement
+            return False
+        
+        row_step = 1 if dr > 0 else -1 # determine the direction of movement
+        col_step = 1 if dc > 0 else -1
+
+        r, c = sr + row_step, sc + col_step # start stepping from the square next to the bishop
+
+        while (r, c) != (er, ec): # walk until we reach the destination (excluding it)
+            if self.board[r][c] != ".":
+                return False  # something is blocking the path
+            r += row_step
+            c += col_step
+
+        return True
+
+
+
+
+
 
 
 
