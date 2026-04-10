@@ -81,4 +81,49 @@ class Board:
         if target != "." and self.get_piece_color(piece) == self.get_piece_color(target): # can't capture your own piece
             return False
         
-        return True
+        if piece.lower() == "p":
+            return self.is_valid_pawn_move(piece, start, end)
+        
+        return False
+    
+    def is_valid_pawn_move(self, piece, start, end):
+        sr, sc = start
+        er, ec = end
+
+        direction = -1 if piece.isupper() else 1 # white moves up, black moves down
+
+        start_row_white = 6
+        start_row_black = 1
+
+        target = self.board[er][ec]
+
+        # --------------------------
+        # 1. Forward move (one step)
+        # --------------------------
+
+        if ec == sc and er == sr + direction:
+            if target == ".":
+                return True
+            
+
+        # --------------------------
+        # 2. Forward move (2 steps)
+        # --------------------------
+
+        if ec == sc and er == sr + 2 * direction:
+            if piece.isupeer() and sr == start_row_white:
+                if self.board[sr + direction][sc] == "." and target == ".":
+                    return True
+
+            if piece.islower() and sr == start_row_black:
+                if self.board[sr + direction][sc] == "." and target == ".":
+                    return True
+                
+        # -----------------------
+        # 3. Diagonal capture
+        # -----------------------
+        if abs(ec - sc) == 1 and er == sr + direction:
+            if target != "." and self.get_piece_color(target) != self.get_piece_color(piece):
+                return True
+
+        return False
