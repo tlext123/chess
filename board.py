@@ -192,6 +192,50 @@ class Board:
             c += col_step
 
         return True
+    
+
+    def is_valid_queen_move(self, piece, start, end):
+        sr, sc = start
+        er, ec = end
+
+        dr = er - sr
+        dc = ec - sc
+
+        # -------------------------
+        # ROOK-LIKE MOVE (straight)
+        # -------------------------
+        if sr == er or sc == ec:
+
+            if sr == er:
+                row_step = 0
+                col_step = 1 if ec > sc else -1
+            else:
+                col_step = 0
+                row_step = 1 if er > sr else -1
+
+        # -------------------------
+        # BISHOP-LIKE MOVE (diagonal)
+        # -------------------------
+        elif abs(dr) == abs(dc):
+
+            row_step = 1 if dr > 0 else -1
+            col_step = 1 if dc > 0 else -1
+
+        else:
+            return False  # not rook or bishop shape
+
+        # -------------------------
+        # path checking (shared logic)
+        # -------------------------
+        r, c = sr + row_step, sc + col_step
+
+        while (r, c) != (er, ec):
+            if self.board[r][c] != ".":
+                return False
+            r += row_step
+            c += col_step
+
+        return True
 
 
 
